@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Confirm activity — Evolution World{% endblock %}
+{% block content %}
+<section class="confirm-wrap panel">
+  <div class="eyebrow">HONESTY IS YOUR SUPERPOWER</div><div class="confirm-symbol">◷</div><h1>Confirm your effort.</h1>
+  <p class="muted">You recorded <strong>{{ activity.activity }}</strong> for <strong>{{ activity.seconds // 60 }} minutes</strong>. Confirm only if you actually completed this activity.</p>
+  <div class="reward-preview"><span>TIME TOKEN REWARD</span><strong>+{{ activity.seconds // 60 }} ◈</strong><small>1 token per full minute · capped at 240 per session</small></div>
+  {% if activity.confirmed %}<div class="flash success">This activity has already been confirmed.</div><a class="btn primary full" href="{{ url_for('dashboard') }}">Back to dashboard</a>
+  {% else %}<form method="post"><label class="confirm-check"><input type="checkbox" required> I confirm that I completed this activity for the recorded time.</label><button class="btn primary full" type="submit">Confirm & claim tokens ↗</button></form><a class="back-link" href="{{ url_for('dashboard') }}">Cancel and return</a>{% endif %}
+</section>
+{% endblock %}

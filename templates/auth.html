@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Create account' if mode == 'register' else 'Sign in' }} — Evolution World{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-art"><div class="eyebrow">YOUR STORY STARTS HERE</div><h1>Every minute<br>moves you <span class="gradient-text">forward.</span></h1><p>Earn your playtime by showing up for the life you're building.</p><div class="auth-orbit">✦</div></div>
+  <form class="auth-card" method="post">
+    <div class="eyebrow">{{ 'PLAYER REGISTRATION' if mode == 'register' else 'WELCOME BACK, PLAYER' }}</div>
+    <h2>{{ 'Create your account' if mode == 'register' else 'Return to your world' }}</h2>
+    <p class="muted">{{ 'Choose a player name and a strong password.' if mode == 'register' else 'Your evolution is waiting.' }}</p>
+    <label>Player name<input name="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_-]+" autocomplete="username" placeholder="e.g. NovaRider"></label>
+    <label>Password<input type="password" name="password" required minlength="10" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" placeholder="At least 10 characters"></label>
+    <button class="btn primary full" type="submit">{{ 'Create account' if mode == 'register' else 'Sign in' }} <span>↗</span></button>
+    <p class="auth-switch">{% if mode == 'register' %}Already a player? <a href="{{ url_for('login') }}">Sign in</a>{% else %}New to this world? <a href="{{ url_for('register') }}">Create account</a>{% endif %}</p>
+    <p class="tiny-note">Activity timers use player confirmation in this prototype. They are not independently verified.</p>
+  </form>
+</section>
+{% endblock %}

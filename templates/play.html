@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Evolution Arena — Evolution World{% endblock %}
+{% block content %}
+<div class="dash-head"><div><div class="eyebrow">GAME ZONE / EVOLUTION ARENA</div><h1>Your time. <span class="gradient-text">Your adventure.</span></h1><p class="muted">The first playable arena: explore, collect energy, and keep building your legend.</p></div><div class="token-chip">◈ <span id="balance">{{ wallet.balance }}</span> TOKENS</div></div>
+{% if not game %}
+<section class="arena-launch panel"><div class="arena-scene"><div class="arena-moon"></div><div class="arena-mountain m1"></div><div class="arena-mountain m2"></div><div class="arena-ground"></div><div class="arena-portal">✦</div><div class="arena-title">THE FIRST FRONTIER</div></div><div class="arena-info"><div><div class="eyebrow">EXPEDITION 001</div><h2>Enter the First Frontier</h2><p class="muted">Explore the realm for as long as your earned tokens allow. This prototype charges one token per minute while your session is active.</p></div>{% if wallet.balance > 0 %}<form method="post" action="{{ url_for('game_start') }}"><button class="btn primary" type="submit">Start expedition ↗</button></form>{% else %}<a class="btn secondary" href="{{ url_for('dashboard') }}">Earn tokens first ↗</a>{% endif %}</div></section>
+{% else %}
+<section class="active-arena panel">
+  <div class="arena-scene active-scene"><div class="arena-moon"></div><div class="arena-mountain m1"></div><div class="arena-mountain m2"></div><div class="arena-ground"></div><div class="arena-portal">✦</div><div class="arena-title">THE FIRST FRONTIER</div><div class="arena-player">◆</div><div class="collectible c1">✧</div><div class="collectible c2">✦</div><div class="collectible c3">✧</div></div>
+  <div class="active-game-bar"><div><div class="eyebrow">EXPEDITION IN PROGRESS</div><h2>Explore the Frontier</h2><p class="muted">Your session is active. Keep this page open; tokens are charged by the server.</p></div><div class="game-timer"><small>SESSION TIME</small><strong id="game-clock">00:00</strong><small><span id="remaining">{{ wallet.balance }}</span> TOKENS LEFT</small></div></div>
+  <div class="game-hud"><div><span>ENERGY SHARDS</span><strong id="shards">0</strong></div><div><span>TIME SPENT</span><strong id="spent">{{ game.spent }} min</strong></div><div><span>NEXT CHARGE</span><strong id="next-charge">60s</strong></div></div>
+  <div class="arena-controls"><button class="btn secondary" id="collect-btn" type="button">Collect energy shard ✦</button><form method="post" action="{{ url_for('game_stop') }}"><button class="btn primary" type="submit">End expedition</button></form></div>
+  <p class="tiny-note">Prototype note: this is a small interactive arena, not yet a full 3D RPG. Game time is charged by server-side session pulses; close the session using End expedition.</p>
+</section>
+<script>
+(() => {
+ let shards=0, elapsed=0, left=Number({{ wallet.balance }}), spent=Number({{ game.spent }});
+ const pulse=async()=>{try{const r=await fetch("{{ url_for('game_pulse') }}",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const d=await r.json();if(!d.ok){return;}left=d.balance;spent=d.spent;elapsed=d.elapsed;document.getElementById("balance").textContent=left;document.getElementById("remaining").textContent=left;document.getElementById("spent").textContent=spent+" min";document.getElementById("game-clock").textContent=String(Math.floor(elapsed/60)).padStart(2,"0")+":"+String(elapsed%60).padStart(2,"0");document.getElementById("next-charge").textContent=d.seconds_until_next+"s";if(d.ended){document.getElementById("collect-btn").disabled=true;alert("Your earned tokens are used up. Expedition ended.");location.href="{{ url_for('dashboard') }}";}}catch(e){}};
+ document.getElementById("collect-btn").addEventListener("click",()=>{shards++;document.getElementById("shards").textContent=shards;const el=document.createElement("div");el.className="shard-pop";el.textContent="✦";document.querySelector(".active-scene").appendChild(el);setTimeout(()=>el.remove(),900);});
+ pulse();setInterval(pulse,5000);
+})();
+</script>
+{% endif %}
+{% endblock %}

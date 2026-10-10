@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Evolution World — Earn your next level{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="pulse"></span> YOUR REAL LIFE IS THE GAME</div>
+    <h1>Become the<br><span class="gradient-text">hero you train</span><br>to be.</h1>
+    <p class="hero-sub">Put time into yourself. Turn real-world effort into play tokens. Evolve your character, conquer quests, and climb the leaderboard.</p>
+    <div class="hero-actions"><a class="btn primary" href="{{ url_for('register') }}">Start your journey <span>↗</span></a><a class="btn secondary" href="{{ url_for('login') }}">I have an account</a></div>
+    <div class="proof-row"><div><strong>01</strong><span>Do the work</span></div><i></i><div><strong>02</strong><span>Earn time</span></div><i></i><div><strong>03</strong><span>Level up</span></div></div>
+  </div>
+  <div class="hero-art">
+    <div class="orb orb-one"></div><div class="orb orb-two"></div>
+    <div class="planet-ring"></div><div class="planet"></div>
+    <div class="hero-card card-top"><span class="mini-icon">◈</span><div><small>REAL-LIFE REWARD</small><b>+30 TIME TOKENS</b></div></div>
+    <div class="character"><div class="char-aura"></div><div class="char-head"></div><div class="char-hair"></div><div class="char-body"></div><div class="char-cape"></div><div class="char-arm left"></div><div class="char-arm right"></div><div class="char-leg left"></div><div class="char-leg right"></div><div class="char-sword"></div></div>
+    <div class="hero-card card-bottom"><div class="level-badge">LVL<br><b>01</b></div><div><small>EVOLUTION PATH</small><b>THE AWAKENING</b><div class="progress"><span style="width:35%"></span></div></div></div>
+    <div class="float-label label-left">✧ FOCUS +1</div><div class="float-label label-right">QUEST READY ↗</div>
+  </div>
+</section>
+<section class="feature-grid">
+  <article class="feature"><span class="feature-num">01 / EARN</span><div class="feature-icon">◷</div><h3>Your time has value.</h3><p>Start an activity timer, finish your real-world task, confirm it, and earn one token per full minute.</p></article>
+  <article class="feature"><span class="feature-num">02 / EVOLVE</span><div class="feature-icon">✧</div><h3>Build your legend.</h3><p>Gain lifetime XP, progress through levels, claim quests, and turn consistency into character growth.</p></article>
+  <article class="feature"><span class="feature-num">03 / COMPETE</span><div class="feature-icon">♜</div><h3>Rise together.</h3><p>Compare earned time and activity consistency with other players on the shared leaderboard.</p></article>
+</section>
+<div class="bottom-cta"><div><div class="eyebrow">THE FIRST STEP IS YOURS</div><h2>Your next level starts <span class="gradient-text">outside the game.</span></h2></div><a class="btn primary" href="{{ url_for('register') }}">Create your hero ↗</a></div>
+{% endblock %}

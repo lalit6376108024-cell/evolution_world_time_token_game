@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Quests — Evolution World{% endblock %}
+{% block content %}
+<div class="dash-head"><div><div class="eyebrow">YOUR EVOLUTION PATH</div><h1>Quests & <span class="gradient-text">milestones.</span></h1><p class="muted">Small real-life wins unlock rewards in your world.</p></div></div>
+<div class="quest-list">{% for q in quests %}<article class="quest-card panel"><div class="quest-icon">{{ '✦' if q.key == 'first_steps' else ('◈' if q.key == 'time_keeper' else '♜') }}</div><div class="quest-copy"><div class="eyebrow">QUEST {{ '%02d'|format(loop.index) }}</div><h2>{{ q.title }}</h2><p class="muted">{{ q.description }}</p></div><div class="quest-reward"><span>REWARD</span><strong>+{{ q.reward }} ◈</strong></div><div class="quest-action">{% if q.key in completed %}<span class="claimed">✓ CLAIMED</span>{% elif eligible[q.key] %}<form method="post" action="{{ url_for('claim_quest', quest_key=q.key) }}"><button class="btn primary" type="submit">Claim reward</button></form>{% else %}<span class="locked">⌑ LOCKED</span>{% endif %}</div></article>{% endfor %}</div>
+<div class="note-panel"><strong>Quest rewards:</strong> these are bonus tokens on top of activity-earned tokens. A quest can only be claimed once per account.</div>
+{% endblock %}

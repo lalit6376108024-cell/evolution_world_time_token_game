@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard — Evolution World{% endblock %}
+{% block content %}
+<div class="dash-head"><div><div class="eyebrow">THE HALL OF LEGENDS</div><h1>Earned, not <span class="gradient-text">given.</span></h1><p class="muted">Players ranked by lifetime tokens earned from confirmed activity. Bonus quest tokens do not increase this score.</p></div></div>
+<section class="panel leaderboard-panel"><div class="leaderboard-head"><div><div class="eyebrow">GLOBAL RANKING</div><h2>Top players</h2></div><span class="live-dot">● ALL PLAYERS</span></div>
+{% if rows %}<div class="leader-row table-head"><span>RANK / PLAYER</span><span>ACTIVITIES</span><span>LIFETIME EARNED</span></div>{% for r in rows %}<div class="leader-row {% if r.username == g.user.username %}self-row{% endif %}"><div class="leader-player"><span class="rank">{{ '%02d'|format(loop.index) }}</span><span class="leader-avatar">{{ r.username[:1]|upper }}</span><div><b>{{ r.username }}{% if r.username == g.user.username %} <small>YOU</small>{% endif %}</b><span>{{ 'Pathfinder' if r.lifetime_earned < 120 else ('Awakened' if r.lifetime_earned < 600 else 'Legend') }}</span></div></div><span class="leader-activities">{{ r.activities }}</span><strong class="leader-score">{{ r.lifetime_earned }} <small>◈</small></strong></div>{% endfor %}
+{% else %}<p class="empty-state">Be the first to enter the Hall of Legends.</p>{% endif %}
+</section>
+{% endblock %}

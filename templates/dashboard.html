@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Evolution World{% endblock %}
+{% block content %}
+<div class="dash-head"><div><div class="eyebrow">PLAYER DASHBOARD / {{ g.user.username|upper }}</div><h1>Welcome back, <span class="gradient-text">{{ g.user.username }}</span>.</h1><p class="muted">Your real-life effort is shaping your next evolution.</p></div><a class="btn secondary" href="{{ url_for('quests') }}">View quests ↗</a></div>
+<section class="stats-grid">
+  <article class="stat-card wallet-card"><div class="stat-label">AVAILABLE TIME TOKENS <span>◈</span></div><div class="stat-number">{{ wallet.balance }}<small> TOKENS</small></div><div class="stat-foot">Spend 1 token for each minute in-game.</div></article>
+  <article class="stat-card"><div class="stat-label">EVOLUTION LEVEL <span>✧</span></div><div class="stat-number">LVL {{ level }}</div><div class="xp-track"><span style="width:{{ (wallet.lifetime_earned % 120) / 120 * 100 }}%"></span></div><div class="stat-foot">{{ wallet.lifetime_earned % 120 }} / 120 tokens to next level</div></article>
+  <article class="stat-card"><div class="stat-label">REAL-LIFE TIME LOGGED <span>◷</span></div><div class="stat-number">{{ (stats.seconds // 3600) }}<small>h</small> {{ ((stats.seconds % 3600) // 60) }}<small>m</small></div><div class="stat-foot">{{ stats.sessions }} confirmed sessions</div></article>
+</section>
+<div class="dashboard-grid">
+  <section class="panel activity-panel">
+    <div class="panel-head"><div><div class="eyebrow">REAL LIFE → GAME TIME</div><h2>Activity timer</h2></div><span class="live-dot">● LIVE TRACKING</span></div>
+    {% set active = recent|selectattr('ended_at', 'equalto', none)|list %}
+    {% if active %}
+      <div class="active-timer"><span class="timer-symbol">◷</span><div><b>{{ active[0].activity }}</b><p>Timer is running. Keep going, then stop and confirm.</p><div id="activity-clock" data-start="{{ active[0].started_at }}">00:00:00</div></div></div>
+      <form method="post" action="{{ url_for('activity_stop') }}"><button class="btn primary full" type="submit">Stop timer & confirm time →</button></form>
+    {% else %}
+      <form method="post" action="{{ url_for('activity_start') }}" class="activity-form">
+        <label>What are you working on?<select name="activity">{% for a in activity_types %}<option>{{ a }}</option>{% endfor %}</select></label>
+        <button class="btn primary full" type="submit">Start activity timer <span>▶</span></button>
+      </form>
+      <p class="tiny-note">Earn 1 token per full minute, after you stop and confirm the session. Maximum 240 minutes per session.</p>
+    {% endif %}
+    <div class="divider-line"></div><div class="panel-head"><h3>Recent activity</h3><span class="muted small">LATEST SESSIONS</span></div>
+    {% if recent %}
+    <div class="activity-list">{% for a in recent %}<div class="activity-row"><div class="activity-dot">{{ '✓' if a.confirmed else '◷' }}</div><div class="activity-info"><b>{{ a.activity }}</b><span>{{ (a.seconds // 60) if a.seconds else 0 }} min · {{ 'Confirmed' if a.confirmed else ('Awaiting confirmation' if a.ended_at else 'In progress') }}</span></div><div class="activity-reward">{% if a.confirmed %}+{{ a.awarded }} ◈{% elif a.ended_at %}<a href="{{ url_for('confirm_activity', session_id=a.id) }}">Confirm</a>{% else %}—{% endif %}</div></div>{% endfor %}</div>
+    {% else %}<p class="empty-state">Your first chapter is waiting. Start a real-life activity above.</p>{% endif %}
+  </section>
+  <section class="panel character-panel">
+    <div class="panel-head"><div><div class="eyebrow">YOUR AVATAR</div><h2>The Awakening</h2></div><span class="level-pill">LVL {{ level }}</span></div>
+    <div class="avatar-stage"><div class="avatar-glow"></div><div class="avatar-sigil">✦</div><div class="avatar-figure"><div class="av-head"></div><div class="av-hair"></div><div class="av-torso"></div><div class="av-cloak"></div><div class="av-arm a"></div><div class="av-arm b"></div><div class="av-leg a"></div><div class="av-leg b"></div></div><div class="avatar-caption">ROOKIE OF THE REALM</div></div>
+    <div class="character-progress"><div><span>Lifetime earned</span><b>{{ wallet.lifetime_earned }} tokens</b></div><div class="xp-track"><span style="width:{{ (wallet.lifetime_earned % 120) / 120 * 100 }}%"></span></div></div>
+    <a class="btn secondary full" href="{{ url_for('quests') }}">Explore quests ↗</a>
+  </section>
+</div>
+<section class="play-banner"><div class="play-emblem">⚔</div><div class="play-copy"><div class="eyebrow">YOUR REWARD IS READY</div><h2>Enter Evolution World</h2><p>Explore the first arena and spend only the tokens you've earned.</p></div><a class="btn primary" href="{{ url_for('play') }}">Enter game ↗</a></section>
+{% endblock %}
+{% block head %}<script defer src="{{ url_for('static', filename='app.js') }}"></script>{% endblock %}
